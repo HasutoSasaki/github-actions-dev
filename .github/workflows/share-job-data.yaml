@@ -1,0 +1,17 @@
+name: Share job data
+on: push
+jobs:
+  before:
+    runs-on: ubuntu-latest
+    steps:
+      - id: generate # ステップID
+        run: echo "message=Hello, World!" >> "${GITHUB_OUTPUT}" # ジョブレベルの出力値
+    outputs:
+      result: ${{ steps.generate.outputs.result}}
+  after:
+    runs-on: ubuntu-latest
+    needs: [before] # beforeジョブの後に実行される
+    steps:
+      - env: # ジョブレベルの出力値を環境変数へ設定
+          RESULT: ${{ needs.before.outputs.result }} # beforeジョブの出力値を参照
+        run: echo "${RESULT}"
